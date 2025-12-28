@@ -63,6 +63,12 @@
                 <artifactId>xiaowei-spring-boot-starter-biz-operationlog</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <!--Json序列化starter-->
+            <dependency>
+                <groupId>com.xiaowei</groupId>
+                <artifactId>xiaowei-spring-boot-starter-jackson</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <!-- Spring Boot 官方依赖管理 -->
             <dependency>

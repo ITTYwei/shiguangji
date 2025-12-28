@@ -3,6 +3,8 @@
 *.iml
 application-dev.yml
 application-prod.yml
+y
+y.pub
 
 ### Java template
 # Compiled class file
