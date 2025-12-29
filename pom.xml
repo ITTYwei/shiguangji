@@ -48,6 +48,7 @@
         <jackson.version>2.16.1</jackson.version>
         <mysql-connector-java.version>8.0.29</mysql-connector-java.version>
         <druid.version>1.2.21</druid.version>
+        <sa-token.version>1.38.0</sa-token.version>
     </properties>
 
     <!-- 统一依赖管理 -->
@@ -70,6 +71,13 @@
                 <groupId>com.xiaowei</groupId>
                 <artifactId>xiaowei-spring-boot-starter-jackson</artifactId>
                 <version>${revision}</version>
+            </dependency>
+
+            <!-- Sa-Token 权限认证 -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot3-starter</artifactId>
+                <version>${sa-token.version}</version>
             </dependency>
 
             <!-- Spring Boot 官方依赖管理 -->

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @SpringBootTest
 @Slf4j
-class shiguangjiAuthApplicationTests {
+class ShiguangjiAuthApplicationTests {
 
     @Resource
     private UserDOMapper userDOMapper;
