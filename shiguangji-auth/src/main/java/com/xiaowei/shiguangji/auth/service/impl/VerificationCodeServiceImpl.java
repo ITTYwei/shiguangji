@@ -48,7 +48,6 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
         //生成验证码
         String verificationCode = RandomUtil.randomNumbers(6);
 
-        // todo: 调用第三方短信发送服务
         // 调用第三方短信发送服务
         threadPoolTaskExecutor.submit(() -> {
             String signName = "速通互联验证码"; // 签名，个人测试签名无法修改

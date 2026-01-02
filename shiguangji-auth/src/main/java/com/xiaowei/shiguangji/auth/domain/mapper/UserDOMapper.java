@@ -2,16 +2,17 @@ package com.xiaowei.shiguangji.auth.domain.mapper;
 
 import com.xiaowei.shiguangji.auth.domain.dataobject.UserDO;
 
+/**
+ * @description: 用户DOMapper
+ * @author: 魏玉石
+ * @data: 2025/12/31
+ */
 public interface UserDOMapper {
-    int deleteByPrimaryKey(Long id);
-
-    int insert(UserDO record);
-
-    int insertSelective(UserDO record);
-
-    UserDO selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(UserDO record);
-
-    int updateByPrimaryKey(UserDO record);
+    /**
+     * 根据手机号查询记录
+     *
+     * @param phone
+     * @return
+     */
+    UserDO selectByPhone(String phone);
 }

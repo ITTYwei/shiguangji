@@ -5,7 +5,6 @@ import lombok.Setter;
 
 /**
  * @author: xiaowei
- * @url: www.xiaowei.com
  * @date: 2023-08-15 9:52
  * @description: 业务异常
  **/

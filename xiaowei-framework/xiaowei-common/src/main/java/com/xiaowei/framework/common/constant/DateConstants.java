@@ -4,7 +4,6 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * @author: xiaowei
- * @url: www.xiaowei.com
  * @date: 2025/5/5 15:40
  * @description: 日期全局常量
  **/
