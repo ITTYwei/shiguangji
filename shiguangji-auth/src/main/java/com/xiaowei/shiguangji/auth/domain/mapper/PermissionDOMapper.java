@@ -2,7 +2,16 @@ package com.xiaowei.shiguangji.auth.domain.mapper;
 
 import com.xiaowei.shiguangji.auth.domain.dataobject.PermissionDO;
 
+import java.util.List;
+
 public interface PermissionDOMapper {
+
+    /**
+     * 查询 APP 端所有被启用的权限
+     *
+     * @return
+     */
+    List<PermissionDO> selectAppEnabledList();
     int deleteByPrimaryKey(Long id);
 
     int insert(PermissionDO record);

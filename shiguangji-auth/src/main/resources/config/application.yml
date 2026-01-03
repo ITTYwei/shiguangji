@@ -8,6 +8,9 @@ spring:
 mybatis:
   # MyBatis xml 配置文件路径
   mapper-locations: classpath:/mapper/**/*.xml
+  configuration:
+    # 开启驼峰命名自动映射
+    map-underscore-to-camel-case: true
 
 
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############

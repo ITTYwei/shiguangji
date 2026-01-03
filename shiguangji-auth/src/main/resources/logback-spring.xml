@@ -41,7 +41,7 @@
     <!-- 本地 dev 开发环境 -->
     <springProfile name="dev">
         <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
-        <root level="INFO">
+        <root level="DEBUG">
             <appender-ref ref="CONSOLE"/> <!-- 输出控制台日志 -->
 <!--            <appender-ref ref="ASYNC_FILE"/> &lt;!&ndash; 打印日志到文件中。PS: 本地环境下，如果不想打印日志到文件，可注释掉此行 &ndash;&gt;-->
         </root>

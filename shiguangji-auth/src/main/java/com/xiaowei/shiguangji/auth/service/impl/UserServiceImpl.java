@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
                         .build();
                 userDOMapper.insert(userDO);
                 Long userId = userDO.getId();
-                log.info("==> 用户注册成功, userDO: {}", JsonUtils.toJsonString(userDO));
+                log.debug("==> 用户注册成功, userDO: {}", JsonUtils.toJsonString(userDO));
                 //添加给用户角色
                 UserRoleRelDO userRoleRelDO = UserRoleRelDO.builder()
                         .userId(userId)
@@ -135,14 +135,12 @@ public class UserServiceImpl implements UserService {
                         .isDeleted(DeletedEnum.NO.getValue())
                         .build();
                 userRoleDOMapper.insert(userRoleRelDO);
-                log.info("==> 用户添加角色成功, userRoleRelDO: {}", JsonUtils.toJsonString(userRoleRelDO));
+                log.debug("==> 用户添加角色成功, userRoleRelDO: {}", JsonUtils.toJsonString(userRoleRelDO));
                 // 将该用户的角色 ID 存入 Redis 中
                 List<Long> roles = Lists.newArrayList();
                 roles.add(RoleConstants.COMMON_USER_ROLE_ID);
                 String userRolesKey = RedisKeyConstants.buildUserRoleKey(phone);
                 redisTemplate.opsForValue().set(userRolesKey, JsonUtils.toJsonString(roles));
-
-
                 return userId;
             }catch (Exception e) {
                 status.setRollbackOnly(); // 标记事务为回滚
