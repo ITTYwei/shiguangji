@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: shiguangji-auth # 应用名称
+  profiles:
+    active: dev # 默认激活 dev 本地开发环境
+  cloud:
+    nacos:
+      config:
+        server-addr: http://101.34.21.174:18848 # 指定 Nacos 配置中心的服务器地址
+        prefix: ${spring.application.name} # 配置 Data Id 前缀，这里使用应用名称作为前缀
+        group: DEFAULT_GROUP # 所属组
+        namespace: acc99ccb-c202-48cb-b525-23585533d490 # 命名空间
+        file-extension: yaml # 这个属性指定的是从 Nacos 服务器拉取的配置文件格式
+        refresh-enabled: true # 是否开启动态刷新
+      discovery:
+        enabled: true # 启用服务发现
+        group: DEFAULT_GROUP # 所属组
+        namespace: acc99ccb-c202-48cb-b525-23585533d490 # 命名空间
+        server-addr: 101.34.21.174:18848 # 指定 Nacos 配置中心的服务器地址
