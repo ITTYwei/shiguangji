@@ -22,6 +22,8 @@
         <module>xiaowei-framework</module>
         <!-- 认证服务 -->
         <module>shiguangji-auth</module>
+        <!-- 网关服务 -->
+        <module>shiguangji-gatwey</module>
     </modules>
 
     <properties>
@@ -63,6 +65,12 @@
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-redis-jackson</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
 
