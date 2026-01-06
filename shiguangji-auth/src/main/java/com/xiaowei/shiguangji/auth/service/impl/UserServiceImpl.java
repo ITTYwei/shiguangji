@@ -12,8 +12,10 @@ import com.xiaowei.framework.common.util.JsonUtils;
 import com.xiaowei.shiguangji.auth.config.RedisTemplateConfig;
 import com.xiaowei.shiguangji.auth.constant.RedisKeyConstants;
 import com.xiaowei.shiguangji.auth.constant.RoleConstants;
+import com.xiaowei.shiguangji.auth.domain.dataobject.RoleDO;
 import com.xiaowei.shiguangji.auth.domain.dataobject.UserDO;
 import com.xiaowei.shiguangji.auth.domain.dataobject.UserRoleRelDO;
+import com.xiaowei.shiguangji.auth.domain.mapper.RoleDOMapper;
 import com.xiaowei.shiguangji.auth.domain.mapper.UserDOMapper;
 import com.xiaowei.shiguangji.auth.domain.mapper.UserRoleRelDOMapper;
 import com.xiaowei.shiguangji.auth.enums.LoginTypeEnum;
@@ -29,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,6 +47,8 @@ public class UserServiceImpl implements UserService {
     private UserDOMapper userDOMapper;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    private RoleDOMapper roleDOMapper;
     @Resource
     private UserRoleRelDOMapper userRoleDOMapper;
     @Resource
@@ -136,11 +141,13 @@ public class UserServiceImpl implements UserService {
                         .build();
                 userRoleDOMapper.insert(userRoleRelDO);
                 log.debug("==> 用户添加角色成功, userRoleRelDO: {}", JsonUtils.toJsonString(userRoleRelDO));
-                // 将该用户的角色 ID 存入 Redis 中
-                List<Long> roles = Lists.newArrayList();
-                roles.add(RoleConstants.COMMON_USER_ROLE_ID);
-                String userRolesKey = RedisKeyConstants.buildUserRoleKey(phone);
-                redisTemplate.opsForValue().set(userRolesKey, JsonUtils.toJsonString(roles));
+                // 将该用户的角色 ID 存入 Redis 中，指定初始容量为 1，这样可以减少在扩容时的性能开销
+                RoleDO roleDO = roleDOMapper.selectByPrimaryKey(RoleConstants.COMMON_USER_ROLE_ID);
+
+                List<String> roleKey = new ArrayList<>(1);
+                roleKey.add(roleDO.getRoleKey());
+                String userRolesKey = RedisKeyConstants.buildUserRoleKey(userId);
+                redisTemplate.opsForValue().set(userRolesKey, JsonUtils.toJsonString(roleKey));
                 return userId;
             }catch (Exception e) {
                 status.setRollbackOnly(); // 标记事务为回滚

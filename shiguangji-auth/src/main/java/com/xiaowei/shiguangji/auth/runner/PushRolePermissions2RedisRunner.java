@@ -98,26 +98,27 @@ public class PushRolePermissions2RedisRunner implements ApplicationRunner {
 
 
             //组织关系
-            HashMap<Long, List<PermissionDO>> roleIdPermissionDOMap = Maps.newHashMap();
+            HashMap<String, List<String>> roleIdPermissionDOMap = Maps.newHashMap();
             roleDOS.forEach(roleDO -> {
                 Long roleDOId = roleDO.getId();
                 //根据角色ID查询权限id
                 List<Long> permissionIds = rolePermissionMap.get(roleDOId);
                 if (CollUtil.isNotEmpty(permissionIds)) {
-                    ArrayList<PermissionDO> permissionDOArrayList = new ArrayList<>();
+                    ArrayList<String> permissionDOArrayList = new ArrayList<>();
                     permissionIds.forEach(permissionId -> {
                         PermissionDO permissionDO = permissionIdDOMap.get(permissionId);
                         if (ObjectUtil.isNotEmpty(permissionDO)) {
-                            permissionDOArrayList.add(permissionDO);
+                            permissionDOArrayList.add(permissionDO.getPermissionKey());
                         }
                     });
-                    roleIdPermissionDOMap.put(roleDOId, permissionDOArrayList);
+                    String roleKey = roleDO.getRoleKey();
+                    roleIdPermissionDOMap.put(roleKey, permissionDOArrayList);
                 }
             });
             // 同步至 Redis 中，方便后续网关查询鉴权使用
-            roleIdPermissionDOMap.forEach((roleId, permissions) -> {
-                String key = RedisKeyConstants.buildRolePermissionsKey(roleId);
-                redisTemplate.opsForValue().set(key, JsonUtils.toJsonString(permissions));
+            roleIdPermissionDOMap.forEach((roleKey, permissionKey) -> {
+                String key = RedisKeyConstants.buildRolePermissionsKey(roleKey);
+                redisTemplate.opsForValue().set(key, JsonUtils.toJsonString(permissionKey));
             });
 
             log.info("==> 服务启动，成功同步角色权限数据到 Redis 中...");
