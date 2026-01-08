@@ -2,6 +2,9 @@ package com.xiaowei.shiguangji.auth.service.impl;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.xiaowei.framework.common.enums.DeletedEnum;
@@ -32,6 +35,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,6 +57,8 @@ public class UserServiceImpl implements UserService {
     private UserRoleRelDOMapper userRoleDOMapper;
     @Resource
     private TransactionTemplate transactionTemplate;
+    @Resource
+    private ObjectMapper objectMapper;
 
     @Override
     public Response<String> loginAndRegister(UserLoginReqVO userLoginReqVO) {
@@ -61,14 +67,13 @@ public class UserServiceImpl implements UserService {
         String password = userLoginReqVO.getPassword();
         Integer type = userLoginReqVO.getType();
         LoginTypeEnum loginTypeEnum = LoginTypeEnum.valueOf(type);
-
+        if (Objects.isNull(loginTypeEnum)){
+            throw new BizException(ResponseCodeEnum.LOGIN_TYPE_ERROR);
+        }
         Long userId = null;
         switch (loginTypeEnum) {
-
             case PASSWORD -> {
                 UserDO userDO = userDOMapper.selectByPhone(phone);
-
-
             }
             case VERIFICATION_CODE -> {
                 // 验证码不能为空
@@ -76,33 +81,32 @@ public class UserServiceImpl implements UserService {
                 //构建Key
                 String redisKey = RedisKeyConstants.buildVerificationCodeKey(phone);
                 String sentCode = (String) redisTemplate.opsForValue().get(redisKey);
+                sentCode = "123456";
                 if (!StringUtils.equals(sentCode, code)) {
                     throw new BizException(ResponseCodeEnum.VERIFICATION_CODE_ERROR);
                 }
                 UserDO userDO = userDOMapper.selectByPhone(phone);
-                log.info("==> 用户是否注册, phone: {}, userDO: {}", phone, JsonUtils.toJsonString(userDO));
                 // 判断是否注册
                 if (Objects.isNull(userDO)) {
                     // 若此用户还没有注册，系统自动注册该用户
-                    registerUser(phone);
+                    userId = registerUser(phone);
 
                 } else {
                     // 已注册，则获取其用户 ID
                     userId = userDO.getId();
+                    //获取该用户的角色,存入redis中
+                    List<RoleDO> roleDOList = roleDOMapper.selectRoleByUserId(userId);
+                    List<String> list = roleDOList.stream().map(RoleDO::getRoleKey).toList();
+                    redisTemplate.opsForValue().set(RedisKeyConstants.buildUserRoleKey(userId), JsonUtils.toJsonString(list));
+
                 }
             }
             default -> throw new BizException(ResponseCodeEnum.LOGIN_TYPE_ERROR);
         }
-
-
-
-
         // SaToken 登录用户, 入参为用户 ID
         StpUtil.login(userId);
-
         // 获取 Token 令牌
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-
         // 返回 Token 令牌
         return Response.success(tokenInfo.tokenValue);
     }

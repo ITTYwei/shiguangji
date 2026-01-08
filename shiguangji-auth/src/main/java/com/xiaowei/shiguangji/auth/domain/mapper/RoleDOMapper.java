@@ -23,4 +23,6 @@ public interface RoleDOMapper {
      * @return
      */
     List<RoleDO> selectEnabledList();
+
+    List<RoleDO> selectRoleByUserId(Long userId);
 }
