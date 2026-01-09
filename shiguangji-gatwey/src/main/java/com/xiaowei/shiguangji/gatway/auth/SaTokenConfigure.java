@@ -1,5 +1,6 @@
 package com.xiaowei.shiguangji.gatway.auth;
 
+import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
@@ -7,10 +8,12 @@ import cn.dev33.satoken.reactor.filter.SaReactorFilter;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@Slf4j
 public class SaTokenConfigure {
     // 注册 Sa-Token全局过滤器
     @Bean
@@ -20,6 +23,7 @@ public class SaTokenConfigure {
                 .addInclude("/**")    /* 拦截全部path */
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
+                    log.info("==================> SaReactorFilter, Path: {}", SaHolder.getRequest().getRequestPath());
                     // 登录校验
                     SaRouter.match("/**") // 拦截所有路由
                             .notMatch("/auth/user/login") // 排除登录接口
