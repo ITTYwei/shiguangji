@@ -23,6 +23,7 @@ import com.xiaowei.shiguangji.auth.domain.mapper.UserDOMapper;
 import com.xiaowei.shiguangji.auth.domain.mapper.UserRoleRelDOMapper;
 import com.xiaowei.shiguangji.auth.enums.LoginTypeEnum;
 import com.xiaowei.shiguangji.auth.enums.ResponseCodeEnum;
+import com.xiaowei.shiguangji.auth.filter.LoginUserContextHolder;
 import com.xiaowei.shiguangji.auth.model.vo.user.UserLoginReqVO;
 import com.xiaowei.shiguangji.auth.service.UserService;
 import jakarta.annotation.Resource;
@@ -61,6 +62,7 @@ public class UserServiceImpl implements UserService {
     private ObjectMapper objectMapper;
 
     @Override
+    @Transactional
     public Response<String> loginAndRegister(UserLoginReqVO userLoginReqVO) {
         String phone = userLoginReqVO.getPhone();
         String code = userLoginReqVO.getCode();
@@ -109,6 +111,23 @@ public class UserServiceImpl implements UserService {
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         // 返回 Token 令牌
         return Response.success(tokenInfo.tokenValue);
+    }
+
+    /**
+     * 退出登录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public Response<?> logout() {
+        Long userId = LoginUserContextHolder.getUserId();
+        // 退出登录 (指定用户 ID)
+        StpUtil.logout(userId);
+        // 删除用户角色缓存
+        redisTemplate.delete(RedisKeyConstants.buildUserRoleKey(userId));
+        log.info("==> 用户退出登录, userId: {}", userId);
+        return Response.success();
     }
 
     /**
