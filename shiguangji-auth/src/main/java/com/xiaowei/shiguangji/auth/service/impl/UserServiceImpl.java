@@ -2,17 +2,14 @@ package com.xiaowei.shiguangji.auth.service.impl;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import com.xiaowei.framework.biz.context.holder.LoginUserContextHolder;
 import com.xiaowei.framework.common.enums.DeletedEnum;
 import com.xiaowei.framework.common.enums.StatusEnum;
 import com.xiaowei.framework.common.exception.BizException;
 import com.xiaowei.framework.common.response.Response;
 import com.xiaowei.framework.common.util.JsonUtils;
-import com.xiaowei.shiguangji.auth.config.RedisTemplateConfig;
 import com.xiaowei.shiguangji.auth.constant.RedisKeyConstants;
 import com.xiaowei.shiguangji.auth.constant.RoleConstants;
 import com.xiaowei.shiguangji.auth.domain.dataobject.RoleDO;
@@ -23,20 +20,21 @@ import com.xiaowei.shiguangji.auth.domain.mapper.UserDOMapper;
 import com.xiaowei.shiguangji.auth.domain.mapper.UserRoleRelDOMapper;
 import com.xiaowei.shiguangji.auth.enums.LoginTypeEnum;
 import com.xiaowei.shiguangji.auth.enums.ResponseCodeEnum;
-import com.xiaowei.shiguangji.auth.filter.LoginUserContextHolder;
+import com.xiaowei.shiguangji.auth.model.vo.user.UpdatePasswordReqVO;
 import com.xiaowei.shiguangji.auth.model.vo.user.UserLoginReqVO;
 import com.xiaowei.shiguangji.auth.service.UserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,6 +58,12 @@ public class UserServiceImpl implements UserService {
     private TransactionTemplate transactionTemplate;
     @Resource
     private ObjectMapper objectMapper;
+
+    @Resource
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -116,12 +120,17 @@ public class UserServiceImpl implements UserService {
     /**
      * 退出登录
      *
-     * @param userId
      * @return
      */
     @Override
     public Response<?> logout() {
         Long userId = LoginUserContextHolder.getUserId();
+        log.info("==> 用户退出登录, userId: {}", userId);
+
+        threadPoolTaskExecutor.submit(() -> {
+            Long userId2 = LoginUserContextHolder.getUserId();
+            log.info("==> 异步线程中获取 userId: {}", userId2);
+        });
         // 退出登录 (指定用户 ID)
         StpUtil.logout(userId);
         // 删除用户角色缓存
@@ -129,6 +138,8 @@ public class UserServiceImpl implements UserService {
         log.info("==> 用户退出登录, userId: {}", userId);
         return Response.success();
     }
+
+
 
     /**
      * 系统自动注册用户
@@ -178,5 +189,26 @@ public class UserServiceImpl implements UserService {
                 return null;
             }
         });
+    }
+
+    @Override
+    public Response<?> updatePassword(UpdatePasswordReqVO updatePasswordReqVO) {
+        // 新密码
+        String newPassword = updatePasswordReqVO.getNewPassword();
+        // 密码加密
+        String encodePassword = passwordEncoder.encode(newPassword);
+
+        // 获取当前请求对应的用户 ID
+        Long userId = LoginUserContextHolder.getUserId();
+
+        UserDO userDO = UserDO.builder()
+                .id(userId)
+                .password(encodePassword)
+                .updateTime(LocalDateTime.now())
+                .build();
+        // 更新密码
+        userDOMapper.updateByPrimaryKeySelective(userDO);
+
+        return Response.success();
     }
 }

@@ -3,6 +3,7 @@ package com.xiaowei.shiguangji.auth.controller;
 import com.xiaowei.framework.biz.operationlog.aspect.ApiOperationLog;
 import com.xiaowei.framework.common.response.Response;
 import com.xiaowei.shiguangji.auth.alarm.AlarmInterface;
+import com.xiaowei.shiguangji.auth.model.vo.user.UpdatePasswordReqVO;
 import com.xiaowei.shiguangji.auth.model.vo.user.UserLoginReqVO;
 import com.xiaowei.shiguangji.auth.service.UserService;
 import jakarta.annotation.Resource;
@@ -35,6 +36,12 @@ public class UserController {
         return userService.logout();
     }
 
+    @PostMapping("/password/update")
+    @ApiOperationLog(description = "修改密码")
+    public Response<?> updatePassword(@Validated @RequestBody UpdatePasswordReqVO updatePasswordReqVO) {
+        return userService.updatePassword(updatePasswordReqVO);
+    }
+
     @Resource
     private AlarmInterface alarm;
     @GetMapping("/alarm")
@@ -42,6 +49,7 @@ public class UserController {
         alarm.send("系统出错啦，犬小哈这个月绩效没了，速度上线解决问题！");
         return "alarm success";
     }
+
 
 
 }

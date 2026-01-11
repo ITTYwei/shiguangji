@@ -25,6 +25,8 @@
         <module>xiaowei-spring-boot-starter-biz-operationlog</module>
         <!--jackson序列化-->
         <module>xiaowei-spring-boot-starter-jackson</module>
+        <!--上下文传递-->
+        <module>xiaowei-spring-boot-starter-biz-context</module>
     </modules>
 
 </project>

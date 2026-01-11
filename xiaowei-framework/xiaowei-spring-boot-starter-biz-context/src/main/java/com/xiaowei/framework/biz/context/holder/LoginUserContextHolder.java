@@ -1,5 +1,6 @@
-package com.xiaowei.shiguangji.auth.filter;
+package com.xiaowei.framework.biz.context.holder;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
 import com.xiaowei.framework.common.constant.GlobalConstants;
 
 import java.util.HashMap;
@@ -13,8 +14,9 @@ import java.util.Objects;
  */
 public class LoginUserContextHolder {
     // 初始化一个 ThreadLocal 变量
+    //这里使用alibaba的TransmittableThreadLocal替换ThreadLocal, 解决父子线程数据不一致问题
     private static final ThreadLocal<Map<String, Object>> LOGIN_USER_CONTEXT_THREAD_LOCAL
-            = ThreadLocal.withInitial(HashMap::new);
+            = TransmittableThreadLocal.withInitial(HashMap::new);
 
 
     /**

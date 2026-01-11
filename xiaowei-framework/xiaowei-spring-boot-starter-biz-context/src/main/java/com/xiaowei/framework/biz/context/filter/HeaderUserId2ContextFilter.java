@@ -1,5 +1,6 @@
-package com.xiaowei.shiguangji.auth.filter;
+package com.xiaowei.framework.biz.context.filter;
 
+import com.xiaowei.framework.biz.context.holder.LoginUserContextHolder;
 import com.xiaowei.framework.common.constant.GlobalConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
