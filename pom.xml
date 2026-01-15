@@ -26,6 +26,8 @@
         <module>shiguangji-gatwey</module>
         <!-- 对象存储服务 -->
         <module>shiguangji-oss</module>
+        <!-- 用户服务 -->
+        <module>shiguangji-user</module>
     </modules>
 
     <properties>
