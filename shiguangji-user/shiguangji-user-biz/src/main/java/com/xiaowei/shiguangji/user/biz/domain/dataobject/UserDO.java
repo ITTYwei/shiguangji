@@ -30,9 +30,9 @@ public class UserDO {
 
     private String phone;
 
-    private Byte sex;
+    private Integer sex;
 
-    private Byte status;
+    private Integer status;
 
     private String introduction;
 

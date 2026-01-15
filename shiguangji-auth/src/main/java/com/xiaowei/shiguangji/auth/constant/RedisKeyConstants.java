@@ -17,7 +17,7 @@ public class RedisKeyConstants {
     }
 
     /**
-     * 小哈书全局 ID 生成器 KEY
+     * 拾光集全局 ID 生成器 KEY
      */
     public static final String SHIGUANGJI_ID_GENERATOR_KEY = "shiguangji.id.generator";
 
