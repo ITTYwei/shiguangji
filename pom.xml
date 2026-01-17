@@ -244,6 +244,11 @@
                 <artifactId>xiaowei-spring-boot-starter-biz-context</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.xiaowei</groupId>
+                <artifactId>shiguangji-oss-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
         </dependencies>
 

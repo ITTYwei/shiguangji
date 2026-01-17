@@ -23,8 +23,8 @@ public class FileServiceImpl implements FileService {
     @Override
     public Response<?> uploadFile(MultipartFile file) {
         // 上传文件到
-        fileStrategy.uploadFile(file, "shiguangji");
+        String url = fileStrategy.uploadFile(file, "shiguangji");
 
-        return Response.success();
+        return Response.success(url);
     }
 }

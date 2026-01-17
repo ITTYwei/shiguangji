@@ -2,16 +2,21 @@ package com.xiaowei.shiguangji.user.biz.service.impl;
 
 import com.google.common.base.Preconditions;
 import com.xiaowei.framework.biz.context.holder.LoginUserContextHolder;
+import com.xiaowei.framework.common.exception.BizException;
 import com.xiaowei.framework.common.response.Response;
 import com.xiaowei.framework.common.util.ParamUtils;
+import com.xiaowei.shiguangji.oss.api.FileFeignApi;
 import com.xiaowei.shiguangji.user.biz.domain.dataobject.UserDO;
 import com.xiaowei.shiguangji.user.biz.domain.mapper.UserDOMapper;
 import com.xiaowei.shiguangji.user.biz.enums.ResponseCodeEnum;
 import com.xiaowei.shiguangji.user.biz.enums.SexEnum;
 import com.xiaowei.shiguangji.user.biz.model.vo.UpdateUserInfoReqVO;
+import com.xiaowei.shiguangji.user.biz.rpc.OssRpcService;
 import com.xiaowei.shiguangji.user.biz.service.UserService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -23,9 +28,15 @@ import java.util.Objects;
  * @data: 2026/1/15
  * @description: 用户业务
  */
+@Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     @Resource
     private UserDOMapper userDOMapper;
+
+    @Resource
+    private OssRpcService ossRpcService;
+
 
     /**
      * 更新用户信息
@@ -45,7 +56,15 @@ public class UserServiceImpl implements UserService {
         MultipartFile avatarFile = updateUserInfoReqVO.getAvatar();
 
         if (Objects.nonNull(avatarFile)) {
-            // todo: 调用对象存储服务上传文件
+            String avatarUrl = ossRpcService.uploadFile(avatarFile);
+            // 若上传头像失败，则抛出业务异常
+            if (StringUtils.isBlank(avatarUrl)) {
+                log.error("==> 调用 oss 服务上传头像失败");
+                throw new BizException(ResponseCodeEnum.UPLOAD_AVATAR_FAIL);
+            }
+            log.info("==> 调用 oss 服务成功，上传头像，url：{}", avatarUrl);
+
+            userDO.setAvatar(avatarUrl);
         }
 
         // 昵称
@@ -90,7 +109,15 @@ public class UserServiceImpl implements UserService {
         // 背景图
         MultipartFile backgroundImgFile = updateUserInfoReqVO.getBackgroundImg();
         if (Objects.nonNull(backgroundImgFile)) {
-            // todo: 调用对象存储服务上传文件
+            String backgroundImgUrl = ossRpcService.uploadFile(backgroundImgFile);
+            // 若上传背景图失败，则抛出业务异常
+            if (StringUtils.isBlank(backgroundImgUrl)) {
+                log.error("==> 调用 oss 服务上传背景图失败");
+                throw new BizException(ResponseCodeEnum.UPLOAD_AVATAR_FAIL);
+            }
+            log.info("==> 调用 oss 服务成功，上传背景图，url：{}", backgroundImgUrl);
+            userDO.setBackgroundImg(backgroundImgUrl);
+            needUpdate = true;
         }
 
         if (needUpdate) {

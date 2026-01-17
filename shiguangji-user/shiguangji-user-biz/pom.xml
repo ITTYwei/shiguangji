@@ -79,6 +79,11 @@
             <artifactId>xiaowei-spring-boot-starter-jackson</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.xiaowei</groupId>
+            <artifactId>shiguangji-oss-api</artifactId>
+        </dependency>
+
 
 
     </dependencies>

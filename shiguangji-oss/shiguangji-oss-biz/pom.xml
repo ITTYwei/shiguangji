@@ -10,7 +10,7 @@
     <!-- 打包方式 -->
     <packaging>jar</packaging>
 
-    <artifactId>xiaohashu-oss-biz</artifactId>
+    <artifactId>shiguangji-oss-biz</artifactId>
     <name>${project.artifactId}</name>
     <description>对象存储业务层</description>
 
@@ -70,6 +70,17 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
+        </dependency>
+        <!-- 业务接口日志组件 -->
+        <dependency>
+            <groupId>com.xiaowei</groupId>
+            <artifactId>xiaowei-spring-boot-starter-biz-operationlog</artifactId>
+        </dependency>
+
+        <!-- Jackson 组件 -->
+        <dependency>
+            <groupId>com.xiaowei</groupId>
+            <artifactId>xiaowei-spring-boot-starter-jackson</artifactId>
         </dependency>
 
 
