@@ -1,1 +1,2 @@
 com.xiaowei.framework.biz.context.config.ContextAutoConfiguration
+com.xiaowei.framework.biz.context.config.FeignContextAutoConfiguration

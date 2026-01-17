@@ -1,5 +1,6 @@
 package com.xiaowei.shiguangji.oss.biz.service.impl;
 
+import com.xiaowei.framework.biz.context.holder.LoginUserContextHolder;
 import com.xiaowei.framework.common.response.Response;
 import com.xiaowei.shiguangji.oss.biz.service.FileService;
 import com.xiaowei.shiguangji.oss.biz.strategy.FileStrategy;
@@ -22,6 +23,8 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public Response<?> uploadFile(MultipartFile file) {
+        LoginUserContextHolder.getUserId();
+            log.info("==> 上传文件，用户ID：{}", LoginUserContextHolder.getUserId());
         // 上传文件到
         String url = fileStrategy.uploadFile(file, "shiguangji");
 

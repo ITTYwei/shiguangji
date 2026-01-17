@@ -83,6 +83,11 @@
             <artifactId>xiaowei-spring-boot-starter-jackson</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.xiaowei</groupId>
+            <artifactId>xiaowei-spring-boot-starter-biz-context</artifactId>
+        </dependency>
+
 
     </dependencies>
 

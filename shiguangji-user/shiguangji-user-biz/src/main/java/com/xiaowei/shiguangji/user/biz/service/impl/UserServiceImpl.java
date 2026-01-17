@@ -48,7 +48,8 @@ public class UserServiceImpl implements UserService {
     public Response<?> updateUserInfo(UpdateUserInfoReqVO updateUserInfoReqVO) {
         UserDO userDO = new UserDO();
         // 设置当前需要更新的用户 ID
-        userDO.setId(LoginUserContextHolder.getUserId());
+        Long userId = LoginUserContextHolder.getUserId();
+        userDO.setId(userId);
         // 标识位：是否需要更新
         boolean needUpdate = false;
 
