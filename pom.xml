@@ -28,6 +28,8 @@
         <module>shiguangji-oss</module>
         <!-- 用户服务 -->
         <module>shiguangji-user</module>
+        <!-- KV 键值存储服务 -->
+        <module>shiguangji-kv</module>
     </modules>
 
     <properties>
