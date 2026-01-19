@@ -9,7 +9,7 @@
     <!-- 打包方式 -->
     <packaging>jar</packaging>
 
-    <artifactId>xiaohashu-user-biz</artifactId>
+    <artifactId>shiguangji-user-biz</artifactId>
     <name>${project.artifactId}</name>
     <description>用户服务业务模块</description>
 
@@ -31,6 +31,18 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-3-starter</artifactId>
+        </dependency>
+
+        <!-- Redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!-- Redis 连接池 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
         </dependency>
 
         <dependency>
@@ -82,6 +94,11 @@
         <dependency>
             <groupId>com.xiaowei</groupId>
             <artifactId>shiguangji-oss-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xiaowei</groupId>
+            <artifactId>shiguangji-user-api</artifactId>
         </dependency>
 
 

@@ -250,6 +250,12 @@
                 <version>${revision}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.xiaowei</groupId>
+                <artifactId>shiguangji-user-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>

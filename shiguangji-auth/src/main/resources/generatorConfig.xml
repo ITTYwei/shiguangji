@@ -33,7 +33,7 @@
         </javaTypeResolver>
 
         <!-- DO 实体类存放路径 -->
-        <javaModelGenerator targetPackage="com.xiaowei.shiguangji.auth.domain.dataobject"
+        <javaModelGenerator targetPackage="com.xiaowei.shiguangji.user.biz.domain.dataobject"
                             targetProject="src/main/java"/>
 
         <!-- Mapper xml 文件存放路径-->
@@ -41,7 +41,7 @@
                          targetProject="src/main/resources"/>
 
         <!-- Mapper 接口存放路径 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.xiaowei.shiguangji.auth.domain.mapper"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.xiaowei.shiguangji.user.biz.domain.mapper"
                              targetProject="src/main/java"/>
 
         <!-- 需要生成的表-实体类 -->
